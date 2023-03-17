@@ -8,6 +8,29 @@
 # Notes:
 # This script is organized into 'chunks' of code, and the final chunk (called 'the essentials') is a minimal representation of this script.
 
+# Lets set a project-specific library
+Sys.unsetenv("R_LIBS_USER")
+dir.create("RLibrary")
+.libPaths()
+.libPaths(paste(getwd(), "RLibrary", sep="/"))
+setRepositories()
+
+# install packages----
+install.packages("beepr")
+install.packages('BiocManager')
+install.packages('tidyverse')
+install.packages("tximport")
+install.packages('ensembldb')
+install.packages('rhdf5')
+install.packages('EnsDb.Hsapiens.v86')
+install.packages('datapasta')
+
+# Alternatively BiocManager does the job for some packages too ----
+# install BiocManager if not already installed
+#if (!requireNamespace('BiocManager', quietly = TRUE))
+#  install.packages('BiocManager')
+#BiocManager::install('rhdf5')
+
 # load packages----
 
 library(rhdf5) #provides functions for handling hdf5 file formats (kallisto outputs bootstraps in this format)
@@ -17,11 +40,6 @@ library(ensembldb) #helps deal with ensembl
 library(EnsDb.Hsapiens.v86) #replace with your organism-specific database package
 library(beepr) #just for fun
 
-install.packages("beepr")
-# install BiocManager if not already installed
-if (!requireNamespace('BiocManager', quietly = TRUE))
-  install.packages('BiocManager')
-BiocManager::install('rhdf5')
 
 
 # read in your study design ----
