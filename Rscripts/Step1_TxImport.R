@@ -13,6 +13,7 @@ Sys.unsetenv("R_LIBS_USER")
 dir.create("RLibrary")
 .libPaths()
 .libPaths(paste(getwd(), "RLibrary", sep="/"))
+.libPaths()
 setRepositories()
 
 # install packages----
@@ -39,7 +40,7 @@ library(tximport) # package for getting Kallisto results into R
 library(ensembldb) #helps deal with ensembl
 library(EnsDb.Hsapiens.v86) #replace with your organism-specific database package
 library(beepr) #just for fun
-
+beep()
 
 
 # read in your study design ----
