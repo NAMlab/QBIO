@@ -1,0 +1,13 @@
+{
+	"n_targets": 34241,
+	"n_bootstraps": 0,
+	"n_processed": 8865639,
+	"n_pseudoaligned": 6527888,
+	"n_unique": 5410269,
+	"p_pseudoaligned": 73.6,
+	"p_unique": 61.0,
+	"kallisto_version": "0.48.0",
+	"index_version": 10,
+	"start_time": "Wed Mar 15 15:52:49 2023",
+	"call": "./kallisto/kallisto quant -i LYCOINDEX -o k_SRR17655903 --single -l 180 -s 20 SRR17655903.trim.fastq.gz"
+}
