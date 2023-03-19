@@ -9,6 +9,16 @@
 # Notes:
 # recall that your abundance data are TPM, while the counts are read counts mapping to each gene or transcript
 
+# Lets set a project-specific library
+Sys.unsetenv("R_LIBS_USER")
+dir.create("RLibrary")
+.libPaths()
+.libPaths(paste(getwd(), "RLibrary", sep="/"))
+
+install.packages("edgeR")
+install.packages('matrixStats')
+install.packages('cowplot')
+
 # Load packages -----
 library(tidyverse) # already know about this from Step 1 script
 library(edgeR) # well known package for differential expression analysis, but we only use for the DGEList object and for normalization methods
@@ -16,7 +26,7 @@ library(matrixStats) # let's us easily calculate stats on rows or columns of a d
 library(cowplot) # allows you to combine multiple plots in one figure
 
 # Examine your data up to this point ----
-myTPM <- Txi_gene$abundance
+myTPM <- Txi_gene$abundance # for transcripts: Txi_transcript$abundance
 myCounts <- Txi_gene$counts
 colSums(myTPM)
 colSums(myCounts)
@@ -41,7 +51,7 @@ head(myTPM.stats)
 # produce a scatter plot of the transformed data
 ggplot(myTPM.stats) + 
   aes(x = SD, y = MED) +
-  geom_point(shape=25, size=3)
+  geom_point(shape=1, size=3)
 # Experiment with point shape and size in the plot above
 # Experiment with other plot types (e.g. 'geom_hex' instead of 'geom_point')
 # Add a theme to your ggplot code above.  Try 'theme_bw()'
@@ -50,15 +60,15 @@ ggplot(myTPM.stats) +
 # Let's expand on the plot above a bit more and take a look at each 'layer' of the ggplot code
 ggplot(myTPM.stats) + 
   aes(x = SD, y = MED) +
-  geom_point(shape=16, size=2) +
+  geom_point(shape=1, size=2) +
   geom_smooth(method=lm) +
-  geom_hex(show.legend = FALSE) +
+  geom_hex(show.legend = T, bins=20) +
   labs(y="Median", x = "Standard deviation",
        title="Transcripts per million (TPM)",
        subtitle="unfiltered, non-normalized data",
        caption="DIYtranscriptomics - Spring 2020") +
-  theme_classic() +
-  theme_dark() + 
+  # theme_classic() +
+  # theme_dark() 
   theme_bw()
 
 # Make a DGElist from your counts, and plot ----
@@ -168,7 +178,8 @@ log2.cpm.filtered.norm.df.pivot <- pivot_longer(log2.cpm.filtered.norm.df, # dat
                                                 values_to = "expression") # name of new variable (column) storing all the values (data)
 
 
-ggplot(log2.cpm.filtered.norm.df.pivot) +
+
+ggplot(log2.cpm.filtered.norm.df.pivot) + #each ggplot can be saved as an object! (p1, p2, p3)
   aes(x=samples, y=expression, fill=samples) +
   geom_violin(trim = FALSE, show.legend = FALSE) +
   stat_summary(fun = "median", 
@@ -189,6 +200,7 @@ ggplot(log2.cpm.filtered.norm.df.pivot) +
 # we'll use the 'plot_grid' function from the cowplot package to put these together in a figure
 plot_grid(p1, p2, p3, labels = c('A', 'B', 'C'), label_size = 12)
 print("Step 2 complete!")
+
 
 # the essentials ----
 library(tidyverse)
@@ -274,4 +286,3 @@ p3 <- ggplot(log2.cpm.filtered.norm.df.pivot) +
   theme_bw()
 
 plot_grid(p1, p2, p3, labels = c('A', 'B', 'C'), label_size = 12)
-
