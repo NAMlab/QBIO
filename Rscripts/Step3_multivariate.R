@@ -3,6 +3,18 @@
 # we'll also continue to create publication-quality graphics
 # This script starts with your filtered and normalized abundance data from the Step 2 script.
 
+# Lets set a project-specific library
+Sys.unsetenv("R_LIBS_USER")
+dir.create("RLibrary")
+.libPaths()
+.libPaths(paste(getwd(), "RLibrary", sep="/"))
+setRepositories()
+
+install.packages('DT')
+install.packages('plotly')
+install.packages('gt')
+
+
 # Load packages ------
 library(tidyverse) # you're familiar with this fromt the past two lectures
 library(DT) # for making interactive tables
@@ -25,7 +37,7 @@ log2.cpm.filtered.norm.df
 #try using filtered and unfiltered data...how does this change the result?
 #try other distance methods (e.g. switch from 'maximum' to 'euclidean')...how does this change the result?
 distance <- dist(t(log2.cpm.filtered.norm), method = "maximum") #other distance methods are "euclidean", maximum", "manhattan", "canberra", "binary" or "minkowski"
-clusters <- hclust(distance, method = "average") #other agglomeration methods are "ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median", or "centroid"
+clusters <- hclust(distance, method = "complete") #other agglomeration methods are "ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median", or "centroid"
 plot(clusters, labels=sampleLabels)
 
 # Principal component analysis (PCA) -------------
@@ -46,7 +58,7 @@ pc.per
 #We know how much each sample contributes to each PC (loadings), so let's plot
 pca.res.df <- as_tibble(pca.res$x)
 ggplot(pca.res.df) +
-  aes(x=PC1, y=PC2, label=sampleLabels) +
+  aes(x=PC1, y=PC2, label=sampleLabels) + # color = group
   geom_point(size=4) +
   # geom_label() +
   # stat_ellipse() +
@@ -66,6 +78,8 @@ ggplot(pca.res.df) +
 # Uncomment 'stat_ellipse()' to see how you can circle clusters on the PCA
 # How would this PCA look if you used raw counts (myCounts) instead of log2 CPM?
 # What are the disadvantages of looking at a PCA result using such a simple XY plot?
+
+# head back to slides
 
 # Create a PCA 'small multiples' chart ----
 # this is another way to view PCA laodings to understand impact of each sample on each pricipal component
@@ -88,7 +102,7 @@ ggplot(pca.pivot) +
   theme_bw() +
   coord_flip()
 
-
+# head back to the slides
 
 # Use dplyr 'verbs' to modify our dataframe ----
 # use dplyr 'mutate' function to add new columns based on existing data
@@ -126,6 +140,8 @@ mydata.grep <- mydata.df %>%
   dplyr::filter(grepl('CXCL|IFI', geneID)) %>%
   dplyr::select(geneID, healthy.AVG, disease.AVG, LogFC) %>%
   dplyr::arrange(desc(geneID))
+
+# head back to the slides
 
 # Produce publication-quality tables using the gt package ----
 gt(mydata.filter)
