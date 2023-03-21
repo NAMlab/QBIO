@@ -5,6 +5,18 @@
 # if you have no biological replicates, you will NOT be able to leverage statistical tools for differential expression analysis
 # instead, you will ONLY rely on fold changes, and can use the dplyr 'verbs' we discussed in Step 3 and 4 to identify genes based on log fold-change
 
+# Lets set a project-specific library
+Sys.unsetenv("R_LIBS_USER")
+dir.create("RLibrary")
+.libPaths()
+.libPaths(paste(getwd(), "RLibrary", sep="/"))
+setRepositories()
+
+# Install new packages -----
+install.packages("reshape2")
+install.packages('heatmaply')
+
+
 # Load packages -----
 library(tidyverse) # you know it well by now!
 library(limma) # venerable package for differential gene expression using linear modeling
@@ -12,6 +24,8 @@ library(edgeR)
 library(gt)
 library(DT)
 library(plotly)
+library(reshape2)
+library(heatmaply)
 
 # Set up your design matrix ----
 group <- factor(targets$group)
@@ -27,6 +41,7 @@ colnames(design) <- levels(group)
 v.DEGList.filtered.norm <- voom(myDGEList.filtered.norm, design, plot = TRUE)
 # fit a linear model to your data
 fit <- lmFit(v.DEGList.filtered.norm, design)
+# Design matrix and linear model: https://youtu.be/R7xd624pR1A
 
 # Contrast matrix ----
 contrast.matrix <- makeContrasts(infection = disease - healthy,
@@ -56,14 +71,14 @@ gt(myTopHits.df)
 # in topTable function above, set 'number=40000' to capture all genes
 
 # now plot
-vplot <- ggplot(myTopHits.df) +
+ggplot(myTopHits.df) + # vplot <- ggplot(myTopHits.df) +
   aes(y=-log10(adj.P.Val), x=logFC, text = paste("Symbol:", geneID)) +
   geom_point(size=2) +
-  #geom_hline(yintercept = -log10(0.01), linetype="longdash", colour="grey", size=1) +
-  #geom_vline(xintercept = 1, linetype="longdash", colour="#BE684D", size=1) +
-  #geom_vline(xintercept = -1, linetype="longdash", colour="#2C467A", size=1) +
-  #annotate("rect", xmin = 1, xmax = 12, ymin = -log10(0.01), ymax = 7.5, alpha=.2, fill="#BE684D") +
-  #annotate("rect", xmin = -1, xmax = -12, ymin = -log10(0.01), ymax = 7.5, alpha=.2, fill="#2C467A") +
+  # geom_hline(yintercept = -log10(0.01), linetype="longdash", colour="grey", linewidth=1) +
+  # geom_vline(xintercept = 1, linetype="longdash", colour="#BE684D", linewidth=1) +
+  # geom_vline(xintercept = -1, linetype="longdash", colour="#2C467A", linewidth=1) +
+  # annotate("rect", xmin = 1, xmax = 12, ymin = -log10(0.01), ymax = 7.5, alpha=.2, fill="#BE684D") +
+  # annotate("rect", xmin = -1, xmax = -12, ymin = -log10(0.01), ymax = 7.5, alpha=.2, fill="#2C467A") +
   labs(title="Volcano plot",
        subtitle = "Cutaneous leishmaniasis",
        caption=paste0("produced on ", Sys.time())) +
@@ -73,12 +88,12 @@ vplot <- ggplot(myTopHits.df) +
 ggplotly(vplot)
 
 # decideTests to pull out the DEGs and make Venn Diagram ----
-results <- decideTests(ebFit, method="global", adjust.method="BH", p.value=0.01, lfc=2)
+results <- decideTests(ebFit, method="global", adjust.method="BH", p.value=0.01, lfc=7)
 
 # take a look at what the results of decideTests looks like
 head(results)
 summary(results)
-vennDiagram(results, include="up")
+vennDiagram(results, include="both")
 
 # retrieve expression data for your DEGs ----
 head(v.DEGList.filtered.norm$E)
@@ -99,6 +114,30 @@ datatable(diffGenes.df,
 
 #write your DEGs to a file
 write_tsv(diffGenes.df,"DiffGenes.txt") #NOTE: this .txt file can be directly used for input into other clustering or network analysis tools (e.g., String, Clust (https://github.com/BaselAbujamous/clust, etc.)
+
+
+# Create a heatmap of differentially expressed genes ----
+
+heatmaply(diffGenes.df[2:11], 
+               #dendrogram = "row",
+               xlab = "Samples", ylab = "DEGs", 
+               main = "DEGs in cutaneous leishmaniasis",
+               scale = "column",
+               margins = c(60,100,40,20),
+               grid_color = "white",
+               grid_width = 0.0000001,
+               titleX = T,
+               titleY = T,
+               hide_colorbar = TRUE,
+               branches_lwd = 0.1,
+               label_names = c("Gene", "Sample:", "Value"),
+               fontsize_row = 5, fontsize_col = 5,
+               labCol = colnames(diffGenes.df)[2:11],
+               labRow = diffGenes.df$geneID,
+               heatmap_layers = theme(axis.line=element_blank())
+)
+
+
 
 # OPTIONAL: differential transcript usage (DTU) analysis ----
 library(IsoformSwitchAnalyzeR)
