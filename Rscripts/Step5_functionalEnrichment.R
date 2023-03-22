@@ -8,6 +8,22 @@
 # Signatures can also be custom made based on your interests.
 # Signatures can also be pulled from R/Bioconductor as described below
 
+Sys.unsetenv("R_LIBS_USER")
+.libPaths()
+.libPaths(paste(getwd(), "RLibrary", sep="/"))
+setRepositories()
+
+install.packages("gplots")
+install.packages("GSEABase")
+install.packages("Biobase")
+install.packages("GSVA")
+install.packages("gprofiler2")
+install.packages("clusterProfiler")
+install.packages("msigdbr")
+install.packages("enrichplot")
+install.packages("qusage")
+install.packages("patchwork")
+
 # Load packages ----
 library(tidyverse)
 library(limma)
@@ -20,6 +36,9 @@ library(gprofiler2) #tools for accessing the GO enrichment results using g:Profi
 library(clusterProfiler) # provides a suite of tools for functional enrichment analysis
 library(msigdbr) # access to msigdb collections directly within R
 library(enrichplot) # great for making the standard GSEA enrichment plots
+library(qusage) # Quantitative Set Analysis for Gene Expression
+library(heatmaply)
+
 
 # Carry out GO enrichment using gProfiler2 ----
 # use topTable result to pick the top genes for carrying out a Gene Ontology (GO) enrichment analysis
@@ -27,7 +46,7 @@ myTopHits <- topTable(ebFit, adjust ="BH", coef=1, number=50, sort.by="logFC")
 # use the 'gost' function from the gprofiler2 package to run GO enrichment analysis
 gost.res <- gost(rownames(myTopHits), organism = "hsapiens", correction_method = "fdr")
 # produce an interactive manhattan plot of enriched GO terms
-gostplot(gost.res, interactive = T, capped = T) #set interactive=FALSE to get plot for publications
+gostplot(gost.res, interactive = T, capped = F) #set interactive=FALSE to get plot for publications
 # produce a publication quality static manhattan plot with specific GO terms highlighted
 # rerun the above gostplot function with 'interactive=F' and save to an object 'mygostplot'
 publish_gostplot(
@@ -38,75 +57,16 @@ publish_gostplot(
   height = NA)
 
 #you can also generate a table of your gost results
-publish_gosttable(
-  gost.res,
-  highlight_terms = NULL,
-  use_colors = TRUE,
-  show_columns = c("source", "term_name", "term_size", "intersection_size"),
-  filename = NULL,
-  ggplot=TRUE)
+# publish_gosttable(
+#   gost.res,
+#   highlight_terms = NULL,
+#   use_colors = TRUE,
+#   show_columns = c("source", "term_name", "term_size", "intersection_size"),
+#   filename = NULL,
+#   ggplot=TRUE)
 # now repeat the above steps using only genes from a single module from the step 6 script, by using `rownames(myModule)`
 # what is value in breaking up DEGs into modules for functional enrichment analysis?
 
-# Perform GSEA using clusterProfiler ----
-# there are a few ways to get msigDB collections into R
-# option1: download directly from msigdb and load from your computer
-# can use the 'read.gmt' function from clusterProfiler package to create a dataframe, 
-# alternatively, you can read in using 'getGmt' function from GSEABase package if you need a GeneSetCollection object
-c2cp <- read.gmt("/Users/danielbeiting/Dropbox/MSigDB/c2.cp.v7.1.symbols.gmt")
-
-# option2: use the msigdb package to access up-to-date collections 
-# this option has the additional advantage of providing access to species-specific collections
-# are also retrieved as tibbles
-msigdbr_species()
-hs_gsea <- msigdbr(species = "Homo sapiens") #gets all collections/signatures with human gene IDs
-#take a look at the categories and subcategories of signatures available to you
-hs_gsea %>% 
-  dplyr::distinct(gs_cat, gs_subcat) %>% 
-  dplyr::arrange(gs_cat, gs_subcat)
-
-# choose a specific msigdb collection/subcollection
-# since msigdbr returns a tibble, we'll use dplyr to do a bit of wrangling
-hs_gsea_c2 <- msigdbr(species = "Homo sapiens", # change depending on species your data came from
-                      category = "C2") %>% # choose your msigdb collection of interest
-  dplyr::select(gs_name, gene_symbol) #just get the columns corresponding to signature name and gene symbols of genes in each signature 
-
-# Now that you have your msigdb collections ready, prepare your data
-# grab the dataframe you made in step3 script
-# Pull out just the columns corresponding to gene symbols and LogFC for at least one pairwise comparison for the enrichment analysis
-mydata.df.sub <- dplyr::select(mydata.df, geneID, LogFC)
-# construct a named vector
-mydata.gsea <- mydata.df.sub$LogFC
-names(mydata.gsea) <- as.character(mydata.df.sub$geneID)
-mydata.gsea <- sort(mydata.gsea, decreasing = TRUE)
-
-# run GSEA using the 'GSEA' function from clusterProfiler
-myGSEA.res <- GSEA(mydata.gsea, TERM2GENE=hs_gsea_c2, verbose=FALSE)
-myGSEA.df <- as_tibble(myGSEA.res@result)
-
-# view results as an interactive table
-datatable(myGSEA.df, 
-          extensions = c('KeyTable', "FixedHeader"), 
-          caption = 'Signatures enriched in leishmaniasis',
-          options = list(keys = TRUE, searchHighlight = TRUE, pageLength = 10, lengthMenu = c("10", "25", "50", "100"))) %>%
-  formatRound(columns=c(2:10), digits=2)
-# create enrichment plots using the enrichplot package
-gseaplot2(myGSEA.res, 
-          geneSetID = c(6, 47, 262), #can choose multiple signatures to overlay in this plot
-          pvalue_table = FALSE, #can set this to FALSE for a cleaner plot
-          title = myGSEA.res$Description[47]) #can also turn off this title
-
-# add a variable to this result that matches enrichment direction with phenotype
-myGSEA.df <- myGSEA.df %>%
-  mutate(phenotype = case_when(
-    NES > 0 ~ "disease",
-    NES < 0 ~ "healthy"))
-
-# create 'bubble plot' to summarize y signatures across x phenotypes
-ggplot(myGSEA.df[1:20,], aes(x=phenotype, y=ID)) + 
-  geom_point(aes(size=setSize, color = NES, alpha=-log10(p.adjust))) +
-  scale_color_gradient(low="blue", high="red") +
-  theme_bw()
 
 # Competitive GSEA using CAMERA----
 # for competitive tests the null hypothesis is that genes in the set are, at most, as often differentially expressed as genes outside the set
@@ -125,7 +85,9 @@ mroast(v.DEGList.filtered.norm$E, collection, design, contrast=1) #mroast adjust
 
 # now repeat with an actual gene set collection
 # camera requires collections to be presented as a list, rather than a tibble, so we must read in our signatures using the 'getGmt' function
-broadSet.C2.ALL <- getGmt("/Users/danielbeiting/Dropbox/MSigDB/c2.all.v7.1.symbols.gmt", geneIdType=SymbolIdentifier())
+broadSet.C2.ALL <- getGmt("c2.cp.kegg.v2023.1.Hs.symbols.gmt", geneIdType=SymbolIdentifier())
+# remind me to provide you a script for plants!
+
 #extract as a list
 broadSet.C2.ALL <- geneIds(broadSet.C2.ALL)
 camera.res <- camera(v.DEGList.filtered.norm$E, broadSet.C2.ALL, design, contrast.matrix[,1]) 
@@ -171,7 +133,7 @@ ggplot(camera.df[1:25,], aes(x=phenotype, y=setName)) +
 # be aware that if you choose a large MsigDB file here, this step may take a while
 GSVA.res.C2CP <- gsva(v.DEGList.filtered.norm$E, #your data
                       broadSet.C2.ALL, #signatures
-                      min.sz=5, max.sz=500, #criteria for filtering gene sets
+                      min.sz=3, max.sz=500, #criteria for filtering gene sets
                       mx.diff=FALSE,
                       method="gsva") #options for method are "gsva", ssgsea', "zscore" or "plage"
 
@@ -184,7 +146,7 @@ ebFit.C2CP <- eBayes(fit.C2CP)
 
 # use topTable and decideTests functions to identify the differentially enriched gene sets
 topPaths.C2CP <- topTable(ebFit.C2CP, adjust ="BH", coef=1, number=50, sort.by="logFC")
-res.C2CP <- decideTests(ebFit.C2CP, method="global", adjust.method="BH", p.value=0.05, lfc=0.58)
+res.C2CP <- decideTests(ebFit.C2CP, method="global", adjust.method="BH", p.value=0.05, lfc=0)
 # the summary of the decideTests result shows how many sets were enriched in induced and repressed genes in all sample types
 summary(res.C2CP)
 
@@ -193,26 +155,37 @@ diffSets.C2CP <- GSVA.res.C2CP[res.C2CP[,1] !=0,]
 head(diffSets.C2CP)
 dim(diffSets.C2CP)
 
-# make a heatmap of differentially enriched gene sets 
-hr.C2CP <- hclust(as.dist(1-cor(t(diffSets.C2CP), method="pearson")), method="complete") #cluster rows by pearson correlation
-hc.C2CP <- hclust(as.dist(1-cor(diffSets.C2CP, method="spearman")), method="complete") #cluster columns by spearman correlation
 
-# Cut the resulting tree and create color vector for clusters.  Vary the cut height to give more or fewer clusters, or you the 'k' argument to force n number of clusters
-mycl.C2CP <- cutree(hr.C2CP, k=2)
-mycolhc.C2CP <- rainbow(length(unique(mycl.C2CP)), start=0.1, end=0.9) 
-mycolhc.C2CP <- mycolhc.C2CP[as.vector(mycl.C2CP)] 
 
-# assign your favorite heatmap color scheme. Some useful examples: colorpanel(40, "darkblue", "yellow", "white"); heat.colors(75); cm.colors(75); rainbow(75); redgreen(75); library(RColorBrewer); rev(brewer.pal(9,"Blues")[-1]). Type demo.col(20) to see more color schemes.
-myheatcol <- colorRampPalette(colors=c("yellow","white","blue"))(100)
-# plot the hclust results as a heatmap
-heatmap.2(diffSets.C2CP, 
-          Rowv=as.dendrogram(hr.C2CP), 
-          Colv=as.dendrogram(hc.C2CP), 
-          col=myheatcol, scale="row",
-          density.info="none", trace="none", 
-          cexRow=0.9, cexCol=1, margins=c(10,14)) # Creates heatmap for entire data set where the obtained clusters are indicated in the color bar.
-# just as we did for genes, we can also make an interactive heatmap for pathways
-# you can edit what is shown in this heatmap, just as you did for your gene level heatmap earlier in the course
+# Create a heatmap of differentially expressed genes ----
+
+heatmaply(diffSets.C2CP, 
+          #dendrogram = "row",
+          xlab = "Samples", ylab = "KEGG pathways", 
+          main = "Responsive KEGG pathways in cutaneous leishmaniasis",
+          scale = "column",
+          margins = c(60,100,40,20),
+          grid_color = "white",
+          grid_width = 0.0000001,
+          titleX = T,
+          titleY = T,
+          hide_colorbar = TRUE,
+          branches_lwd = 0.1,
+          label_names = c("Gene", "Sample:", "Value"),
+          fontsize_row = 5, fontsize_col = 5,
+          labCol = colnames(diffSets.C2CP),
+          labRow = rownames(diffSets.C2CP),
+          heatmap_layers = theme(axis.line=element_blank())
+)
+
+
+
+
+
+
+
+
+
 
 # the essentials ----
 library(tidyverse)
