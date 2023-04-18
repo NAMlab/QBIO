@@ -3,15 +3,15 @@
 
 Focus on the application of RNA-seq technology and statistical methods to investigate gene expression patterns and regulation in plants. The depth of explanation should align with scientific manuscripts that utilize RNA-seq data analysis but should not delve into the intricacies of technology or statistical method development.
 
-Provide a brief overview of RNA-seq technology used and its significance in understanding gene expression. Briefly describe the bioinformatics tools and statistical methods used for data analysis. The focus should be on the rationale behind using these tools and methods and their role in generating biologically meaningful results.
+Provide a brief overview of RNA-seq technology used in the study, its advantages and limitations that might affect the results. Briefly but precisely describe the bioinformatics tools and statistical methods used for data analysis. The focus should be on the rationale behind using these tools and methods and their role in generating biologically meaningful results.
 
-While it is crucial to understand and present the general concepts of the technology and the statistical methods, please dont delve into the details of algorithm development or technical specifications, unless you do use some very unique technique and it is crucial to understand the analysis and the result. Instead, the emphasis should be placed on effectively applying the technology and methods to answer the research question, interpret the results, and draw biologically relevant conclusions.
+While it is crucial to understand the statistical methods, please dont delve into the details of _e.g._ algorithm development, unless you use some very unique technique and it is crucial to understand the analysis and the result. Instead, the emphasis should be placed on effectively applying the methods to answer the research question, interpret the results, and draw biologically relevant conclusions.
 
 The report should be supported by figures with reasonable resolution and readable font size.
 A comprehensive documentation of software and software package versions should be provided.
-Finally, students should attach to the report a documented and clearily annotated code (options include: txt file, github repostitory, jupiter notebook etc)
+Finally, please attach to the report a documented and clearily annotated code (options include: txt file, github repostitory, jupiter notebook etc)
 
-
+Below, I delineate an exemplary outline of such report, but as I said you are free to do it your way (including _e.g._ digital interactive formats) as long as it is accessible and written in a clear scientific language. 
 
 **Title**:
 
