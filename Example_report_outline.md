@@ -1,7 +1,7 @@
 
 **Depth of the report**
 
-Please focus on the application of RNA-seq technology and statistical methods to investigate gene expression patterns and regulation in plants. The depth of explanation should align with scientific manuscripts that utilize RNA-seq data analysis but should not delve into the intricacies of technology or statistical method development.
+Focus on the application of RNA-seq technology and statistical methods to investigate gene expression patterns and regulation in plants. The depth of explanation should align with scientific manuscripts that utilize RNA-seq data analysis but should not delve into the intricacies of technology or statistical method development.
 
 Provide a brief overview of RNA-seq technology used and its significance in understanding gene expression. Briefly describe the bioinformatics tools and statistical methods used for data analysis. The focus should be on the rationale behind using these tools and methods and their role in generating biologically meaningful results.
 
