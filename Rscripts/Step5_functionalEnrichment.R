@@ -86,7 +86,10 @@ mroast(v.DEGList.filtered.norm$E, collection, design, contrast=1) #mroast adjust
 # now repeat with an actual gene set collection
 # camera requires collections to be presented as a list, rather than a tibble, so we must read in our signatures using the 'getGmt' function
 broadSet.C2.ALL <- getGmt("c2.cp.kegg.v2023.1.Hs.symbols.gmt", geneIdType=SymbolIdentifier())
-# remind me to provide you a script for plants!
+# Option for plants: goto http://structuralbiology.cau.edu.cn/PlantGSEA/download.php
+# Download the gene set of interest for the species of interest (e.g. Ara_KEGG.txt)
+# broadSet.C2.ALL <- getGmt("Ara_KEGG.txt",geneIdType=SymbolIdentifier())
+# broadSet.C2.ALL <- geneIds(broadSet.C2.ALL)
 
 #extract as a list
 broadSet.C2.ALL <- geneIds(broadSet.C2.ALL)
