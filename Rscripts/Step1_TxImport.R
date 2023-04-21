@@ -93,7 +93,39 @@ Tx.lyc <- dplyr::rename(Tx.lyc, target_id = ensembl_transcript_id, gene_name = e
 #transcrip ID needs to be the first column in the dataframe
 Tx.lyc <- dplyr::select(Tx.lyc, "target_id", "gene_name")
 
+#Tx.lyc # mapping provided my biomart
+#   target_id          gene_name       
+#   <chr>              <chr>           
+# 1 Solyc12g042120.2.1 Solyc12g042120.2
+# 2 Solyc01g067380.3.1 Solyc01g067380.3
+# 3 Solyc05g006260.1.1 Solyc05g006260.1
+# 4 Solyc12g019340.1.1 Solyc12g019340.1
+# 5 Solyc12g097070.2.1 Solyc12g097070.2
+# 6 Solyc05g015710.3.1 Solyc05g015710.3
+# 7 Solyc09g057715.1.1 Solyc09g057715.1
+# 8 Solyc06g072480.1.1 Solyc06g072480.1
+# 9 Solyc10g008210.3.1 Solyc10g008210.3
+#10 Solyc12g009745.1.1 Solyc12g009745.1
+# ... with 35,815 more rows
 
+## optional if needed:
+#Tx.lyc = apply(Tx.lyc,2, function(x) gsub("\\.[0-9]+$","", x))
+#Tx.lyc <- as_tibble(Tx.lyc) 
+
+#Tx.lyc # mapping truncated for isoforms
+#   target_id        gene_name     
+#   <chr>            <chr>         
+# 1 Solyc12g042120.2 Solyc12g042120
+# 2 Solyc01g067380.3 Solyc01g067380
+# 3 Solyc05g006260.1 Solyc05g006260
+# 4 Solyc12g019340.1 Solyc12g019340
+# 5 Solyc12g097070.2 Solyc12g097070
+# 6 Solyc05g015710.3 Solyc05g015710
+# 7 Solyc09g057715.1 Solyc09g057715
+# 8 Solyc06g072480.1 Solyc06g072480
+# 9 Solyc10g008210.3 Solyc10g008210
+#10 Solyc12g009745.1 Solyc12g009745
+# ... with 35,815 more rows
 
 # import Kallisto transcript counts into R using Tximport ----
 # copy the abundance files to the working directory and rename so that each sample has a unique name
