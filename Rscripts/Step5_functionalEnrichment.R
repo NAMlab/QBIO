@@ -43,7 +43,7 @@ library(heatmaply)
 # Carry out GO enrichment using gProfiler2 ----
 # use topTable result to pick the top genes for carrying out a Gene Ontology (GO) enrichment analysis
 myTopHits <- topTable(ebFit, adjust ="BH", coef=1, number=50, sort.by="logFC")
-# use the 'gost' function from the gprofiler2 package to run GO enrichment analysis
+# use the 'gost' function from the gprofiler2 package to run GO enrichment analysis, the list of available species for the "organism" parameters is here: https://biit.cs.ut.ee/gprofiler/page/organism-list 
 gost.res <- gost(rownames(myTopHits), organism = "hsapiens", correction_method = "fdr")
 # produce an interactive manhattan plot of enriched GO terms
 gostplot(gost.res, interactive = T, capped = F) #set interactive=FALSE to get plot for publications
