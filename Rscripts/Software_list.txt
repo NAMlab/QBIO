@@ -1,0 +1,45 @@
+# What should be already installed on the course laptops:
+R
+conda
+FastQC
+MultiQC
+Kallisto
+HISAT2
+Trimmomatic
+Samtools
+IGV: https://software.broadinstitute.org/software/igv/download
+Helixer
+Sublime text editor
+Gffread
+featurecounts
+Salmon
+
+# Software to install:
+Rstudio
+
+# R libraries to install:
+library(rhdf5) #provides functions for handling hdf5 file formats (kallisto outputs bootstraps in this format)
+library(tidyverse) # provides access to Hadley Wickham's collection of R packages for data science, which we will use throughout the course
+library(tximport) # package for getting Kallisto results into R
+library(ensembldb) #helps deal with ensembl
+library(EnsDb.Hsapiens.v86) #replace with your organism-specific database package
+library(beepr) #just for fun
+library(edgeR) # well known package for differential expression analysis, but we only use for the DGEList object and for normalization methods
+library(matrixStats) # let's us easily calculate stats on rows or columns of a data matrix
+library(cowplot) # allows you to combine multiple plots in one figure
+library(DT) # for making interactive tables
+library(plotly) # for making interactive plots
+library(ggplot2) # for making interactive plots
+library(gt) # A layered 'grammar of tables' - think ggplot, but for tables
+library(limma) # venerable package for differential gene expression using linear modeling
+library(reshape2)
+library(heatmaply)
+library(gplots) #for heatmaps
+library(GSEABase) #functions and methods for Gene Set Enrichment Analysis
+library(Biobase) #base functions for bioconductor; required by GSEABase
+library(GSVA) #Gene Set Variation Analysis, a non-parametric and unsupervised method for estimating variation of gene set enrichment across samples.
+library(gprofiler2) #tools for accessing the GO enrichment results using g:Profiler web resources
+library(clusterProfiler) # provides a suite of tools for functional enrichment analysis
+library(msigdbr) # access to msigdb collections directly within R
+library(enrichplot) # great for making the standard GSEA enrichment plots
+library(qusage) # Quantitative Set Analysis for Gene Expression
