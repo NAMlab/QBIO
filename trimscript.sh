@@ -1,5 +1,8 @@
 #!/bin/bash
 # Set path to trimmomatic
+java -jar Trimmomatic-0.39/trimmomatic-0.39.jar PE -threads 8 $input1 $input2 $output1 $output2 \
+ILLUMINACLIP: Trimmomatic-0.39/adapters/TrueSeq3-PE-2.fa:2:30:10 \
+LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:70
 
 
 # Loop through each sample
