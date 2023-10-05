@@ -10,21 +10,21 @@
 
 
 # Lets set a project-specific library
-Sys.unsetenv("R_LIBS_USER")
-dir.create("RLibrary")
-.libPaths()
-.libPaths(paste(getwd(), "RLibrary", sep="/"))
-setRepositories()
+# Sys.unsetenv("R_LIBS_USER")
+# dir.create("RLibrary")
+# .libPaths()
+# .libPaths(paste(getwd(), "RLibrary", sep="/"))
+# setRepositories()
 
 # install packages----
-install.packages("beepr")
-install.packages('BiocManager')
-install.packages('tidyverse')
-install.packages("tximport")
-install.packages('ensembldb')
-install.packages('rhdf5')
-install.packages('EnsDb.Hsapiens.v86')
-install.packages('datapasta')
+# install.packages("beepr")
+# install.packages('BiocManager')
+# install.packages('tidyverse')
+# install.packages("tximport")
+# install.packages('ensembldb')
+# install.packages('rhdf5')
+# install.packages('EnsDb.Hsapiens.v86')
+# install.packages('datapasta')
 
 # BiocManager::install('tximport')
 # BiocManager::install('ensembldb')
