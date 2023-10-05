@@ -4,15 +4,15 @@
 # This script starts with your filtered and normalized abundance data from the Step 2 script.
 
 # Lets set a project-specific library
-Sys.unsetenv("R_LIBS_USER")
-dir.create("RLibrary")
-.libPaths()
-.libPaths(paste(getwd(), "RLibrary", sep="/"))
-setRepositories()
+# Sys.unsetenv("R_LIBS_USER")
+# dir.create("RLibrary")
+# .libPaths()
+# .libPaths(paste(getwd(), "RLibrary", sep="/"))
+# setRepositories()
 
-install.packages('DT')
-install.packages('plotly')
-install.packages('gt')
+# install.packages('DT')
+# install.packages('plotly')
+# install.packages('gt')
 
 
 # Load packages ------
