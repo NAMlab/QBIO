@@ -8,21 +8,21 @@
 # Signatures can also be custom made based on your interests.
 # Signatures can also be pulled from R/Bioconductor as described below
 
-Sys.unsetenv("R_LIBS_USER")
-.libPaths()
-.libPaths(paste(getwd(), "RLibrary", sep="/"))
-setRepositories()
+# Sys.unsetenv("R_LIBS_USER")
+# .libPaths()
+# .libPaths(paste(getwd(), "RLibrary", sep="/"))
+# setRepositories()
 
-install.packages("gplots")
-install.packages("GSEABase")
-install.packages("Biobase")
-install.packages("GSVA")
-install.packages("gprofiler2")
-install.packages("clusterProfiler")
-install.packages("msigdbr")
-install.packages("enrichplot")
-install.packages("qusage")
-install.packages("patchwork")
+# install.packages("gplots")
+# install.packages("GSEABase")
+# install.packages("Biobase")
+# install.packages("GSVA")
+# install.packages("gprofiler2")
+# install.packages("clusterProfiler")
+# install.packages("msigdbr")
+# install.packages("enrichplot")
+# install.packages("qusage")
+# install.packages("patchwork")
 
 # Load packages ----
 library(tidyverse)
