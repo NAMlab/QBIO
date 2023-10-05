@@ -6,15 +6,15 @@
 # instead, you will ONLY rely on fold changes, and can use the dplyr 'verbs' we discussed in Step 3 and 4 to identify genes based on log fold-change
 
 # Lets set a project-specific library
-Sys.unsetenv("R_LIBS_USER")
-dir.create("RLibrary")
-.libPaths()
-.libPaths(paste(getwd(), "RLibrary", sep="/"))
-setRepositories()
+# Sys.unsetenv("R_LIBS_USER")
+# dir.create("RLibrary")
+# .libPaths()
+# .libPaths(paste(getwd(), "RLibrary", sep="/"))
+# setRepositories()
 
 # Install new packages -----
-install.packages("reshape2")
-install.packages('heatmaply')
+# install.packages("reshape2")
+# install.packages('heatmaply')
 
 
 # Load packages -----
