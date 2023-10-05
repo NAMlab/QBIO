@@ -1,0 +1,42 @@
+#getting the data from SRA
+
+wget --output-document sratoolkit.tar.gz https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz
+tar -vxzf sratoolkit.tar.gz
+export PATH=$PATH:$PWD/sratoolkit.3.0.7-ubuntu64/bin
+fastq-dump --stdout -X 2 SRR390728
+
+fastq-dump --stdout -X 2 SRR390728
+
+vdb-config -i
+
+
+
+
+prefetch SRR8668759 
+fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip ~/ncbi/public/sra/SRR2121685.sra
+
+fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip ~/home/ibg-4/course/SRAfetch/sra/SRR2121685.sra
+fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRAfetch/sra/SRR2121685.sra
+
+ls fastq
+
+
+java -jar ./Trimmomatic-0.39/trimmomatic-0.39.jar SE SRR17655907.fastq.gz SRR17655907.trim.fastq.gz
+
+java -jar ./Trimmomatic-0.39/trimmomatic-0.39.jar SE course_data2/SRR17655898.fastq.gz course_data2/SRR17655898.trim.fastq.gz
+SRR17655898.fastq.gz
+
+
+
+java -jar ./Trimmomatic-0.39/trimmomatic-0.39.jar ourse_data2/SRR17655898.fastq.gz course_data2/SRR17655898.trim.fastq.gz I
+LLUMINACLIP:./Trimmomatic-0.39/adapters/TruSeq3-SE.fa:2:30:10 
+HEADCROP:5 SLIDINGWINDOW:4:15 MINLEN:70
+
+
+java -jar Trimmomatic-0.39/trimmomatic-0.39.jar PE -threads 8 $input1 $input2 $output1 $output2 \
+ILLUMINACLIP: Trimmomatic-0.39/adapters/TrueSeq3-PE-2.fa:2:30:10 \
+LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:70
+
+java -jar Trimmomatic-0.39/trimmomatic-0.39.jar SE -threads 8 course_data2/SRR17655898.fastq.gz course_data2/SRR17655898.trimmed.fastq.gz \
+ILLUMINACLIP:./Trimmomatic-0.39/adapters/TruSeq3-SE.fa:2:30:10 HEADCROP:5 \
+SLIDINGWINDOW:4:15 MINLEN:70
