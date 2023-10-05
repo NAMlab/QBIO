@@ -10,14 +10,14 @@
 # recall that your abundance data are TPM, while the counts are read counts mapping to each gene or transcript
 
 # Lets set a project-specific library
-Sys.unsetenv("R_LIBS_USER")
-dir.create("RLibrary")
-.libPaths()
-.libPaths(paste(getwd(), "RLibrary", sep="/"))
+# Sys.unsetenv("R_LIBS_USER")
+# dir.create("RLibrary")
+# .libPaths()
+# .libPaths(paste(getwd(), "RLibrary", sep="/"))
 
-install.packages("edgeR")
-install.packages('matrixStats')
-install.packages('cowplot')
+# install.packages("edgeR")
+# install.packages('matrixStats')
+# install.packages('cowplot')
 
 # Load packages -----
 library(tidyverse) # already know about this from Step 1 script
