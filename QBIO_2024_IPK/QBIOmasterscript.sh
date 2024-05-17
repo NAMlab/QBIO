@@ -27,6 +27,9 @@ wget https://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-57/fasta/solanum_ly
 # Unzip the genome
 gunzip Solanum_lycopersicum.SL3.0.cdna.all.fa.gz
 
+# Index the genome using kallisto
+kallisto index -i Solanum_lycopersicum.SL3.0.cdna.all.index Solanum_lycopersicum.SL3.0.cdna.all.fa
+
 # Perform mapping with Kallisto
 kallisto quant -i Solanum_lycopersicum.SL3.0.cdna.all.index -o mapped_reads/H3 -t 8 /fastq_files/SRR10056916_1.fastq.gz /fastq_files/SRR10056916_2.fastq.gz &> H3.log
 kallisto quant -i Solanum_lycopersicum.SL3.0.cdna.all.index -o mapped_reads/H2 -t 8 /fastq_files/SRR10056917_1.fastq.gz /fastq_files/SRR10056917_2.fastq.gz &> H2.log
